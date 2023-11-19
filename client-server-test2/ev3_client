@@ -6,6 +6,7 @@
 
 # The server must be started before the client!
 
+import helpers
 from pybricks.messaging import BluetoothMailboxClient, TextMailbox
 from pybricks import ev3brick as brick
 
@@ -21,6 +22,39 @@ print('connected!')
 
 # In this program, the client sends the first message and then waits for the
 # server to reply.
-mbox.send('Mars to Earth, hello from Mars')
-mbox.wait()
-print(mbox.read())
+# mbox.send('Mars to Earth, hello from Mars')
+# mbox.wait()
+# print(mbox.read())
+
+# Define the initial position and orientation of this robot
+initial_position = {'x': 0, 'y': 0, 'orientation': 0}
+
+# Initialize the GyroSensor for orientation estimation
+# gyro = GyroSensor(Port.S4)
+
+# print('establishing connection...')
+# client.connect(SERVER)
+# print('connected!')
+
+# Simulate robot movement (update distance and angle based on your requirements)
+distance_traveled = 1.0 
+angle_turned = 0.0  
+
+# Update the client's position based on movement
+initial_position['x'], initial_position['y'] = helpers.client_position(
+    (initial_position['x'], initial_position['y']),
+    distance_traveled,
+    initial_position['orientation']
+)
+
+# Send the updated position to the server
+print(initial_position)
+brick.display.text(str(initial_position))
+mbox.send(str(initial_position))
+
+
+# while True:
+
+
+#     # Wait before updating again
+#     mbox.wait(100)
