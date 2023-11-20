@@ -20,12 +20,6 @@ print('establishing connection...')
 client.connect(SERVER)
 print('connected!')
 
-# In this program, the client sends the first message and then waits for the
-# server to reply.
-# mbox.send('Mars to Earth, hello from Mars')
-# mbox.wait()
-# print(mbox.read())
-
 # Define the initial position and orientation of this robot
 initial_position = {'x': 0, 'y': 0, 'orientation': 0}
 
@@ -51,10 +45,3 @@ initial_position['x'], initial_position['y'] = helpers.client_position(
 print(initial_position)
 brick.display.text(str(initial_position))
 mbox.send(str(initial_position))
-
-
-# while True:
-
-
-#     # Wait before updating again
-#     mbox.wait(100)
