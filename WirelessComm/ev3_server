@@ -20,4 +20,5 @@ print('connected!')
 # and then sends a reply.
 mbox.wait()
 print(mbox.read())
-mbox.send('Earth to Mars, this is Earth ')
+mbox.send('Earth to Mars, this is Earth')
+
