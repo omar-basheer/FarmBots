@@ -81,7 +81,7 @@ def handshake(server, client, server_mailbox_name, client_mailbox_name, client_n
         print(client_mailbox)
 
         # Send position updates from the client to the server
-        for i in range(50):
+        for i in range(5):
             x, y, theta = get_current_position()
             # Include client identifier in the position update message
             message_to_send = "Position Update from "+ client_mailbox_name + ", X=" + str(x) + ", Y= " + str(y) + ", Theta= " + str(theta) 
@@ -92,7 +92,7 @@ def handshake(server, client, server_mailbox_name, client_mailbox_name, client_n
         # Iterate over each server mailbox and read messages
         for i, server_mailbox in enumerate(server_mailboxes):
             print()
-            for j in range(50):
+            for j in range(5):
                 #receive message from client
                 received_message = server_mailbox.read()
                 if received_message:

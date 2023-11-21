@@ -7,12 +7,15 @@ from localization import get_current_position
 def main():
     # start bluetooth server on Server ev3
     print("starting bluetooth server...")
-    server = start_bluetooth_server(client_number=1)
+    # server = start_bluetooth_server(client_number=1)
+    # server = start_bluetooth_server(client_number=2)
+    server = start_bluetooth_server(client_number=3)
 
     # Test handshake
     print("initializing bluetooth handshake...")
     # test_handshake(server, None, server_mailbox_name='client', client_mailbox_name='client', client_num=1)
-    handshake(server, None, server_mailbox_name='client', client_mailbox_name='client', client_num=1)
+    # handshake(server, None, server_mailbox_name='client', client_mailbox_name='client', client_num=1)
+    handshake(server, None, server_mailbox_name='client', client_mailbox_name='client', client_num=3)
 
 if __name__ == "__main__":
    main()

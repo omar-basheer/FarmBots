@@ -13,6 +13,8 @@ def main():
     print("receiving bluetooth handshake...")
     # test_handshake(None, client, server_mailbox_name='client0', client_mailbox_name='client0', client_num=0)
     handshake(None, client, server_mailbox_name='client0', client_mailbox_name='client0', client_num=0)
+    # handshake(None, client, server_mailbox_name='client1', client_mailbox_name='client1', client_num=0)
+    # handshake(None, client, server_mailbox_name='client2', client_mailbox_name='client2', client_num=0)
 
 if __name__ == "__main__":
     main()
