@@ -1,5 +1,6 @@
+import pickle
 from localization import get_current_position
-from pybricks.messaging import BluetoothMailboxServer, BluetoothMailboxClient, TextMailbox, Mailbox
+from pybricks.messaging import BluetoothMailboxServer, BluetoothMailboxClient, Mailbox
 from pybricks import ev3brick as brick
 import time
 from collections import deque
@@ -48,10 +49,34 @@ def create_mailbox(name, connection):
     - connection: The Bluetooth connection to associate with the mailbox.
 
     Returns:
-    TextMailbox: The initialized TextMailbox.
+    Mailbox: The initialized Mailbox.
     """
-    mailbox = TextMailbox(name, connection)
+    mailbox = Mailbox(name, connection)
     return mailbox
+
+def encode_message(message):
+    """
+    Encode a Python message into bytes using pickle.
+
+    Parameters:
+    - message (any): The Python object to be encoded.
+
+    Returns:
+    bytes: The encoded bytes.
+    """
+    return pickle.dumps(message)
+
+def decode_message(encoded_message):
+    """
+    Decode bytes into a Python object using pickle.
+
+    Parameters:
+    - encoded_message (bytes): The encoded bytes.
+
+    Returns:
+    any: The decoded Python object.
+    """
+    return pickle.loads(encoded_message)
 
 def send_server_update_message(client_mailbox, client_mailbox_name, status, task_state, position, fruit_location):
     """
@@ -65,8 +90,11 @@ def send_server_update_message(client_mailbox, client_mailbox_name, status, task
     - position (str): The position update of the client (x, y, theta).
     - fruit_location (str): The assigned fruit location update (x, y).
     """
-    update_message = "Update: Status=" + status + ",Task State=" +task_state+ ",Position=" + position + ",Assigned Fruit Location=" + fruit_location
-    client_mailbox.send(update_message)
+    # update_message = "Update: Status=" + status + ",Task State=" +task_state+ ",Position=" + position + ",Assigned Fruit Location=" + fruit_location
+    message_data = [status, task_state, position, fruit_location]
+    encoded_message = encode_message(message_data)
+    client_mailbox.send(encoded_message)
+    client_mailbox.wait()
 
 def send_client_task_message(client_mailbox, client_mailbox_name, task_message):
     """
@@ -77,7 +105,10 @@ def send_client_task_message(client_mailbox, client_mailbox_name, task_message):
     - client_mailbox_name (str): The name of the client mailbox.
     - task_message (str): The task message to send (x,y).
     """
-    client_mailbox.send(task_message)
+    message_data = task_message
+    encoded_message = encode_message(message_data)
+    client_mailbox.send(encoded_message)
+    client_mailbox.wait()
 
 def send_position_updates(client_mailbox, client_id):
     x, y, theta = get_current_position()
