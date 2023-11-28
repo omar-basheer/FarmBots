@@ -1,4 +1,4 @@
-from localization import get_current_position
+from farmbots.localization import get_current_position
 from pybricks.messaging import BluetoothMailboxServer, BluetoothMailboxClient, TextMailbox, Mailbox
 from pybricks import ev3brick as brick
 import time

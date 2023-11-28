@@ -15,7 +15,7 @@ def initialize__server_world(fruit_map, grid_size):
         row, col = fruit_location
         # Check if the provided location is within the grid boundaries
         if 0 <= row < grid_size and 0 <= col < grid_size:
-            world_grid[row][col] = "fruit_"+fruit_color
+            world_grid[row][col] = "f_"+fruit_color
 
     return world_grid
 

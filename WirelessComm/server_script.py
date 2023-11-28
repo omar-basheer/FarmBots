@@ -1,7 +1,7 @@
 #!/usr/bin/env pybricks-micropython
 # from communications import handshake, start_bluetooth_server, create_mailbox, close_bluetooth_connection, test_handshake
 from communications import close_bluetooth_connection, create_mailbox, start_bluetooth_server, handshake, test_handshake
-from localization import get_current_position
+from farmbots.localization import get_current_position
 
   
 def main():
