@@ -5,25 +5,41 @@
 """
 
 # Importing requirement modules and classes from the ev3dev2 library.
-from ev3dev2.motor import LargeMotor, MoveTank, OUTPUT_B, OUTPUT_C
+from ev3dev2.motor import LargeMotor, MoveTank, OUTPUT_B, OUTPUT_C, OUTPUT_D, MediumMotor   
 from ev3dev2.sound import Sound
 from math import pi
 
 # Instanstiating objects of the Sound, LargeMotor, and MoveTank classes
 microphone = Sound()
-right_motor = LargeMotor(OUTPUT_B)
-left_motor = LargeMotor(OUTPUT_C)
-drive_base = MoveTank(OUTPUT_C, OUTPUT_B)
+right_motor = LargeMotor(OUTPUT_C)
+left_motor = LargeMotor(OUTPUT_B)
+gripper_motor = MediumMotor(OUTPUT_D)
+drive_base = MoveTank(OUTPUT_B, OUTPUT_C)
 
 # Instantiation of constants
 RADIUS = 2.7 
 DISTANCE_BTN_WHEELS = 11.7
+
 
 # Setting the volume of the microphone to 100%. 
 # This means that any sound played through the microphone will be played at the maximum volume.
 microphone.set_volume(100)
 
 # HELPER FUNCTIONS
+def open_gripper():
+    """
+    The function opens the gripper.
+    """
+
+    gripper_motor.on_for_degrees(speed=-100, degrees=100, brake=True, block=True)
+
+def close_gripper():
+    """
+    The function closes the gripper.
+    """
+    gripper_motor.on_for_degrees(speed=100, degrees=100, brake=True, block=True)
+
+    gripper_motor.on_for_degrees(speed=100, degrees=100, brake=True, block=True)
 def get_wheel_circumference(radius):
     """
     The function calculates the circumference of a wheel given its radius.
