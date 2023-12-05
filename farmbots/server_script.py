@@ -94,6 +94,7 @@ def process_message(client_name, message, fruit_number):
         # fruit_number = fruit_number -1 if task_state == 'completed' else fruit_number
         fruit_state[fruit_location]['assigned_agent'] = client_name 
         if task_state == 'completed' and fruit_state[fruit_location]['picked']:
+            # global fruit_number 
             fruit_number -= 1
     print("current fruit states...")
     print_fruit_state()
@@ -106,7 +107,6 @@ def process_message(client_name, message, fruit_number):
         assigned_task = assign_task(client_name)
         if assigned_task: 
             print("Assigned task to " + client_name +": " + "Go to fruit at " + str(assigned_task))
-            
             return assigned_task
         
     elif status == 'busy' and task_state == 'in progress':
@@ -165,7 +165,7 @@ def main():
                 print("all fruits collected successfully, program ending...")
                 fruit_number = 0
     
-        time.sleep(7)
+        time.sleep(5)
     # close_bluetooth_connection(server)
         
 

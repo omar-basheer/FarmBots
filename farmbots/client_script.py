@@ -3,6 +3,7 @@ import random
 import time
 from comms import close_bluetooth_connection, create_mailbox, decode_message, send_server_update_message, start_bluetooth_server, test_handshake, connect_to_bluetooth_server
 from farm_helpers import initialize_client_world
+from planning import followPath, planPath
 from localization import get_current_position
 from pybricks import ev3brick as brick
 
@@ -10,28 +11,42 @@ def print_world(farm_space):
     for row in farm_space:
         print(" ".join(map(str, row)))
 
-def pickup_fruit(current_position, goal_position):
-    # Simulate task planning and execution duration
-    planning_duration = 3  # in seconds
-    execution_duration = 7  # in seconds
+# def pickup_fruit(current_position, goal_position):
+#     # Simulate task planning and execution duration
+#     planning_duration = 3  # in seconds
+#     execution_duration = 7  # in seconds
 
-    print("Robot is planning a path from {} to {}.".format(current_position, goal_position))
-    time.sleep(planning_duration)
+#     print("Robot is planning a path from {} to {}.".format(current_position, goal_position))
+#     time.sleep(planning_duration)
     
-    # Simulate execution of the planned path
-    print("Robot is executing the planned path...")
-    time.sleep(execution_duration)
+#     # Simulate execution of the planned path
+#     print("Robot is executing the planned path...")
+#     time.sleep(execution_duration)
 
-    # Simulate picking up the fruit - random success or failure
-    pickup_success = random.choice([True, False])
+#     # Simulate picking up the fruit - random success or failure
+#     pickup_success = random.choice([True, False])
 
-    if pickup_success:
-        print("Pickup successful!")
-    else:
-        print("Pickup failed. Retrying...")
+#     if pickup_success:
+#         print("Pickup successful!")
+#     else:
+#         print("Pickup failed. Retrying...")
 
-    return pickup_success
+#     return pickup_success
 
+def pickup_fruit(current_position, goal_position, world):
+    print("planning path from current position to goal...")
+    x, y, direction = current_position
+    curr_path = planPath((x,y), goal_position, world)
+    print("planned path" + str(curr_path))
+
+    followPath((x,y), direction, curr_path)
+    final_position = get_current_position()
+    print("final position:" + final_position)
+    print("last position in path:" + curr_path[-1])
+
+    if final_position == curr_path[-1]:
+        return True
+    return False
 
 def main():
     server_brick_address = 'ash-ev3-07'
@@ -79,7 +94,7 @@ def main():
 
             # step 3.1.3.2: execute path planning and fruit collecting
             print("executing task...")
-            task_success = pickup_fruit(position, fruit_location)
+            task_success = pickup_fruit(position, fruit_location, farm_space)
 
             if task_success == True:
                 # update client information

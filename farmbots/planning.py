@@ -174,11 +174,11 @@ def followPath(startCell, orientation, path):
         curDir = relDir
 
 
-if __name__ == "__main__":
-    test_grid = [[0,0,0,0,0],
-                 [0,0,1,1,0],
-                 [0,0,1,0,0],
-                 [0,1,0,0,0]]
+# if __name__ == "__main__":
+#     test_grid = [[0,0,0,0,0],
+#                  [0,0,1,1,0],
+#                  [0,0,1,0,0],
+#                  [0,1,0,0,0]]
     
-    path = planPath((3,0), (3,4), test_grid)
-    followPath((3,0), 0, path)
+#     path = planPath((3,0), (3,4), test_grid)
+#     followPath((3,0), 0, path)
