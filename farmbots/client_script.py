@@ -11,7 +11,7 @@ def print_world(farm_space):
     for row in farm_space:
         print(" ".join(map(str, row)))
 
-# def pickup_fruit(current_position, goal_position):
+# def pickup_fruit(current_position, goal_position, world):
 #     # Simulate task planning and execution duration
 #     planning_duration = 3  # in seconds
 #     execution_duration = 7  # in seconds
@@ -35,11 +35,11 @@ def print_world(farm_space):
 
 def pickup_fruit(current_position, goal_position, world):
     print("planning path from current position to goal...")
-    x, y, direction = current_position
+    x, y, orientation = current_position
     curr_path = planPath((x,y), goal_position, world)
     print("planned path" + str(curr_path))
 
-    followPath((x,y), direction, curr_path)
+    followPath((x,y), orientation, curr_path)
     final_position = get_current_position()
     print("final position:" + final_position)
     print("last position in path:" + curr_path[-1])
@@ -49,10 +49,10 @@ def pickup_fruit(current_position, goal_position, world):
     return False
 
 def main():
-    server_brick_address = 'ash-ev3-07'
-    client_mailbox_name = 'client1'
     GRID_SIZE = 12
-    x, y, theta = 0, 0, 0
+    server_brick_address = 'ash-ev3-07'
+    client_mailbox_name = 'client0'
+    x, y, orientation = 0, 0, 0
     
     # step 1: connect to server
     print("starting bluetooth client...")
@@ -90,6 +90,8 @@ def main():
             task_state = 'in progress'
             position = position
             fruit_location = task_message
+            print("current position: " + str(position))
+            print("Mission: collect fruit at: " +str(fruit_location))
             brick.display.text(task_message)
 
             # step 3.1.3.2: execute path planning and fruit collecting
