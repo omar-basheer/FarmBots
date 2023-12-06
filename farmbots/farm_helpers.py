@@ -28,6 +28,6 @@ def initialize_client_world(grid_size):
     - client_world (list): 2D list representing the initial state of the world for a client.
     """
     # Initialize a grid with all cells initially marked as unknown
-    client_world = [['unknown' for _ in range(grid_size)] for _ in range(grid_size)]
+    client_world = [[0 for _ in range(grid_size)] for _ in range(grid_size)]
     
     return client_world

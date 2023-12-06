@@ -1,3 +1,4 @@
+from movement import drive_straight, spin
 def neighboring_cells(curPos, map):   
     """
     Determines the neighbouring cells of the current position in the grid
@@ -38,6 +39,7 @@ def wavefront_alg(goalCell, map):
         goalCell: x,y coordinates of the goal coordinates
         map: World map
     """
+    print("creating wavefront..." )
     frontier = []
     (x,y) = goalCell
 
@@ -67,6 +69,7 @@ def trace_path(startCell, wavefrontPlan):
         Return:
             Sequence of coordinattes to get from the start cell to the goal cell.
     """
+    print("tracing path...")
     path = []
 
     while wavefrontPlan[startCell[0]][startCell[1]] != 2:
@@ -98,8 +101,12 @@ def planPath(startCell, goalCell, map):
             Sequence of coordinattes to get from the start cell to the goal cell.
 
     """
+    print("startCell:" + str(startCell) )
+    print("goalCell:" + str(goalCell) )
     wavefrontPlan = wavefront_alg(goalCell, map)
+    print("wavefront:" + str(wavefrontPlan))
     path = trace_path(startCell, wavefrontPlan)
+    print("path:" + str(path))
     return path
 
 directions = ['east','south','west','north']
@@ -142,6 +149,7 @@ def followPath(startCell, orientation, path):
     """
     curPos = startCell
     curDir = orientation
+    print("following path...")
 
     for i in range(len(path)):
         nextPos = path[i]
@@ -158,27 +166,32 @@ def followPath(startCell, orientation, path):
 
         if angle == 1 or angle == -3:
             print('Turn right')
+            spin("right", 90, 20)
 
         
         elif angle == -1 or angle == 3:
             print('Turn left')
+            spin("left", 90, 20)
         
         elif angle == 2 or angle == -2:
             print("Turn around")
+            spin("left", 180, 20)
 
 
         print("Go straight")
+        drive_straight(45, 20)
         print()
 
         curPos = nextPos
         curDir = relDir
 
 
-# if __name__ == "__main__":
-#     test_grid = [[0,0,0,0,0],
-#                  [0,0,1,1,0],
-#                  [0,0,1,0,0],
-#                  [0,1,0,0,0]]
+if __name__ == "__main__":
+    print("main")
+    # test_grid = [[0,0,0,0,0],
+    #              [0,0,1,1,0],
+    #              [0,0,1,0,0],
+    #              [0,1,0,0,0]]
     
-#     path = planPath((3,0), (3,4), test_grid)
-#     followPath((3,0), 0, path)
+    # path = planPath((3,0), (3,4), test_grid)
+    # followPath((3,0), 0, path)
