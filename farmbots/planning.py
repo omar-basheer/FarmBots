@@ -58,6 +58,18 @@ def wavefront_alg(goalCell, map):
 
     return map
 
+def print_wavefront(wavefront_map):
+    """
+    Prints the wavefront map.
+
+    Parameters:
+    - wavefront_map: 2D list representing the wavefront map.
+    """
+    print("Wavefront Map:")
+    for row in wavefront_map:
+        print(row)
+    print()
+
 def trace_path(startCell, wavefrontPlan):
     """
     Traces a path from the start cell to the goal by picking the least neighbouring skill.
@@ -104,7 +116,7 @@ def planPath(startCell, goalCell, map):
     print("startCell:" + str(startCell) )
     print("goalCell:" + str(goalCell) )
     wavefrontPlan = wavefront_alg(goalCell, map)
-    print("wavefront:" + str(wavefrontPlan))
+    print_wavefront(wavefrontPlan)
     path = trace_path(startCell, wavefrontPlan)
     print("path:" + str(path))
     return path
@@ -140,7 +152,7 @@ def relDirection(pos1, pos2):
 
 def followPath(startCell, orientation, path):
     """Based on the start cell and orientation, this function allows the robot to
-    follow the path from start to gaol making the necessary turns and movements.
+    follow the path from start to goal making the necessary turns and movements.
 
         Params:
             startCell: x,y coordinates of the start cell.
@@ -184,6 +196,10 @@ def followPath(startCell, orientation, path):
 
         curPos = nextPos
         curDir = relDir
+
+    print("curPos: " + str(curPos))
+    print("curDir: " + str(curDir))
+    return curPos, curDir
 
 
 if __name__ == "__main__":
