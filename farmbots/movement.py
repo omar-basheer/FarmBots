@@ -6,13 +6,14 @@ from pybricks.parameters import Port
 from math import pi
 
 RADIUS = 27 
-DIAMETER = 27*2
+DIAMETER = 54
 DISTANCE_BTN_WHEELS = 117
 
 ev3 = EV3Brick()
 left_motor = Motor(Port.B)
 right_motor = Motor(Port.C)
-drive_base = DriveBase(left_motor=left_motor, right_motor=right_motor, wheel_diameter=DIAMETER, axle_track=DISTANCE_BTN_WHEELS)
+# drive_base = DriveBase(left_motor=left_motor, right_motor=right_motor, wheel_diameter=DIAMETER, axle_track=DISTANCE_BTN_WHEELS)
+drive_base = DriveBase(left_motor, right_motor, DIAMETER, DISTANCE_BTN_WHEELS)
 
 
 # Helper functions

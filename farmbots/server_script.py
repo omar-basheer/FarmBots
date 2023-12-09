@@ -1,4 +1,6 @@
 #!/usr/bin/env pybricks-micropython
+import math
+import threading
 from comms import close_bluetooth_connection, create_mailbox, decode_message, send_client_task_message, start_bluetooth_server, test_handshake
 from farm_helpers import initialize__server_world
 from localization import get_current_position
@@ -38,6 +40,7 @@ def print_world(farm_space):
     for row in farm_space:
         print(" ".join(map(str, row)))
 
+
 def print_fruit_state():
     """
     Prints the fruit state in key-value pairs line by line.
@@ -48,27 +51,84 @@ def print_fruit_state():
             location, state['color'], state['picked'], state['assigned_agent']
         ))
 
-def assign_task(client_name):
+
+# def shortest_distance_to_fruit(client_position, fruit_position):
+#     """
+#     Calculate the shortest Euclidean distance from the client to any fruit.
+
+#     Parameters:
+#     - client_position (tuple): The (x, y) position of the client.
+#     - fruit_positions (list of tuples): List of (x, y) positions of all fruits.
+
+#     Returns:
+#     float: The shortest Euclidean distance to a fruit.
+#     """
+#     shortest_distance = float('inf')
+
+#     distance = math.sqrt((client_position[0] - fruit_position[0]) ** 2 +
+#                              (client_position[1] - fruit_position[1]) ** 2)
+
+#     return shortest_distance
+
+
+# def assign_task(client_name):
+#     """
+#     Assigns a task to a client based on the current fruit state.
+
+#     Parameters:
+#     - client_name (str): The name of the client to assign the task.
+
+#     Returns:
+#     tuple or None: The location of the assigned fruit or None if no task is available.
+#     """
+#     for fruit_location, state in fruit_state.items():
+#         if not state['picked'] and fruit_location not in assigned_fruits:
+#             state['assigned_agent'] = client_name
+#             assigned_fruits.add(fruit_location)
+#             return fruit_location
+        
+
+def assign_task(client_name, client_position):
     """
-    Assigns a task to a client based on the current fruit state.
+    Assigns a task to a client based on the current fruit state and the client's position.
 
     Parameters:
     - client_name (str): The name of the client to assign the task.
+    - client_position (tuple): The (x, y) position of the client.
 
     Returns:
     tuple or None: The location of the assigned fruit or None if no task is available.
     """
+    optimal_task = None
+    shortest_distance = float('inf')
+
+    print("position: " + str(client_position))
     for fruit_location, state in fruit_state.items():
         if not state['picked'] and fruit_location not in assigned_fruits:
-            state['assigned_agent'] = client_name
-            assigned_fruits.add(fruit_location)
-            return fruit_location
+            # Calculate Euclidean distance between client and fruit
+            print("fruit location: " + str(fruit_location))
+            distance = math.sqrt((client_position[0] - fruit_location[0]) ** 2 +
+                                 (client_position[1] - fruit_location[1]) ** 2)
+            
+            print("Distance to " + str(fruit_location) +":"  + str(distance))
+            # Update optimal_task if the distance is shorter
+            if distance < shortest_distance:
+                shortest_distance = distance
+                optimal_task = fruit_location
+
+    if optimal_task:
+        fruit_state[optimal_task]['assigned_agent'] = client_name
+        assigned_fruits.add(optimal_task)
+
+    return optimal_task
+
 
 def reassign_task(client_name, fruit_location):
     return fruit_location
 
 def assign_new_task(client_name):
     pass
+
 
 
 def process_message(client_name, message, fruit_number):
@@ -88,6 +148,7 @@ def process_message(client_name, message, fruit_number):
     message_list = decode_message(message)
 
     status, task_state, client_position, fruit_location = message_list
+    print("current client position: " + str(client_position))
 
     if  fruit_location:
         fruit_state[fruit_location]['picked'] = True if task_state == 'completed' else False
@@ -103,7 +164,7 @@ def process_message(client_name, message, fruit_number):
 
     if status == 'free':
         # client is waiting for fresh task to execute
-        assigned_task = assign_task(client_name)
+        assigned_task = assign_task(client_name, (client_position[0], client_position[1]))
         if assigned_task: 
             print("Assigned task to " + client_name +": " + "Go to fruit at " + str(assigned_task))
             return assigned_task
@@ -152,6 +213,7 @@ def main():
                 print(client_updates_queue)
     
         #step 3.2: process messages in queue
+        threads = []
         while client_updates_queue:
             # print("reading a message...")
             client_name, message = client_updates_queue.popleft()
