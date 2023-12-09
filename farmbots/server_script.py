@@ -15,9 +15,6 @@ fruit_state = {}
 # set to track assigned fruits
 assigned_fruits = set()
 
-# Lock to ensure thread-safe updates to shared data
-lock = threading.Lock()
-
 def initialize_fruit_state(farm_space):
     """
     Initializes the state of fruits in the farm space.
