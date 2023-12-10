@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 def neighboring_cells(curPos, map):   
     """
     Determines the neighbouring cells of the current position in the grid

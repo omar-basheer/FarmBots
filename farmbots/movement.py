@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 @team: 9
 @authors: Cyril Kujar, Abigail Animah Owusu, and Omar Basheer
@@ -141,3 +142,7 @@ def spin(direction, angle, speed):
         drive_base.on_for_degrees(left_speed=speed, right_speed=-speed, degrees=num_degs, brake=True, block=True)
     else:
         microphone.speak(text="Unknown Direction")
+
+
+if __name__ == "__main__":
+    print("H")
