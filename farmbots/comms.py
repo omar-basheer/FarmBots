@@ -87,7 +87,7 @@ def send_server_update_message(client_mailbox, client_mailbox_name, status, task
     - client_mailbox_name (str): The name of the client mailbox.
     - status (str): The status update of the client (free, busy).
     - task_state (str): The task state update (completed, in progress).
-    - position (str): The position update of the client (x, y, theta).
+    - position (str): The position update of the client (x, y).
     - fruit_location (str): The assigned fruit location update (x, y).
     """
     # update_message = "Update: Status=" + status + ",Task State=" +task_state+ ",Position=" + position + ",Assigned Fruit Location=" + fruit_location
