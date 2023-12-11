@@ -1,9 +1,6 @@
-<<<<<<< HEAD
 #!/usr/bin/env python3
+from movement import drive_straight, turn_in_place
 
-=======
-from movement import drive_straight, spin
->>>>>>> 527cb020797ce74a7ddee4beffc052fee67f1288
 def neighboring_cells(curPos, map):   
     """
     Determines the neighbouring cells of the current position in the grid
@@ -183,20 +180,20 @@ def followPath(startCell, orientation, path):
 
         if angle == 1 or angle == -3:
             print('Turn right')
-            spin("right", 90, 20)
+            turn_in_place("right", 90, 100)
 
         
         elif angle == -1 or angle == 3:
             print('Turn left')
-            spin("left", 90, 20)
+            turn_in_place("left", 90, 100)
         
         elif angle == 2 or angle == -2:
             print("Turn around")
-            spin("left", 180, 20)
+            turn_in_place("left", 180, 100)
 
 
         print("Go straight")
-        drive_straight(45, 20)
+        drive_straight(450, 100)
         print()
 
         curPos = nextPos

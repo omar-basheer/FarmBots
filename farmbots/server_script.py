@@ -181,11 +181,11 @@ def process_message(client_name, message, fruit_number):
 def main():
     server_mailbox_name = client_mailbox_name = 'client'
     client_num = 2
-    GRID_SIZE = 12
+    GRID_SIZE = 5
     fruit_map = {
         (2, 3): 'red', 
-        (5, 8): 'green', 
-        (9, 4): 'yellow'
+        (1, 2): 'green', 
+        (0, 4): 'yellow'
         }
 
     # step 1: connect to clients

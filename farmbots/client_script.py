@@ -8,7 +8,7 @@ from localization import get_current_position
 from pybricks import ev3brick as brick
 
 
-curr_x, curr_y, curr_orientation = 1, 0, 0
+curr_x, curr_y, curr_orientation = 0, 0, 0
 
 def print_world(farm_space):
     for row in farm_space:
@@ -64,7 +64,7 @@ def pickup_fruit(current_position, goal_position, world):
 #     return False
 
 def main():
-    GRID_SIZE = 12
+    GRID_SIZE = 5
     server_brick_address = 'ash-ev3-07'
     client_mailbox_name = 'client1'
     # x, y, orientation = 0, 0, 0
