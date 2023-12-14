@@ -1,12 +1,11 @@
 #!/usr/bin/env pybricks-micropython
 import random
 import time
+from planning import followPath, planPath
 from comms import close_bluetooth_connection, create_mailbox, decode_message, send_server_update_message, start_bluetooth_server, test_handshake, connect_to_bluetooth_server
 from farm_helpers import initialize_client_world
-from planning import followPath, planPath
 from localization import get_current_position
 from pybricks import ev3brick as brick
-
 
 curr_x, curr_y, curr_orientation = 1, 0, 0
 
@@ -48,26 +47,12 @@ def pickup_fruit(current_position, goal_position, world):
             return True, x, y, orientation
     return False, x, y, orientation
 
-# def pickup_fruit(current_position, goal_position, world):
-#     print("planning path from current position to goal...")
-#     x, y, orientation = current_position
-#     curr_path = planPath((x,y), goal_position, world)
-#     print("planned path" + str(curr_path))
-
-#     followPath((x,y), orientation, curr_path)
-#     final_position = get_current_position()
-#     print("final position:" + final_position)
-#     print("last position in path:" + curr_path[-1])
-
-#     if final_position == curr_path[-1]:
-#         return True
-#     return False
 
 def main():
-    GRID_SIZE = 12
     server_brick_address = 'ash-ev3-07'
-    client_mailbox_name = 'client1'
-    # x, y, orientation = 0, 0, 0
+    client_mailbox_name = 'client0'
+    GRID_SIZE = 5
+    # x, y, theta = 1, 0, 0
     
     # step 1: connect to server
     print("starting bluetooth client...")
@@ -84,7 +69,6 @@ def main():
     # step 3: set iniital client state:
     client_status = 'free'
     task_state = None
-    # position = get_current_position()
     position = curr_x, curr_y, curr_orientation
     fruit_location = None
 
@@ -112,8 +96,7 @@ def main():
 
             # step 3.1.3.2: execute path planning and fruit collecting
             print("executing task...")
-            task_success, x, y, orientation = pickup_fruit(position, fruit_location, farm_space)
-            set_current_position(x, y, orientation)
+            task_success = pickup_fruit(position, fruit_location, farm_space)
             farm_space = initialize_client_world(grid_size=GRID_SIZE)
 
             if task_success == True:
@@ -122,16 +105,13 @@ def main():
                 task_state = 'completed'
                 position = get_current_position()
                 fruit_location = task_message
-            else:
-                # update client information
-                client_status = 'busy'
-                task_state = 'in progress'
-                position = get_current_position()
-                fruit_location = task_message
+            # else:
+            #     # update client information
+            #     client_status = 'busy'
+            #     task_state = 'in progress'
+            #     position = get_current_position()
+            #     fruit_location = task_message
               
 
 if __name__ == "__main__":
    main()
-
-
-

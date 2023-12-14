@@ -1,13 +1,15 @@
 from movement import drive_straight, turn_in_place
+
 def neighboring_cells(curPos, map):   
     """
-    Determines the neighbouring cells of the current position in the grid
-        Params: 
-            curPos: The current position of thr robot
-            map: The grid map
+    Determines the neighbouring cells of the current position in the grid.
 
-        Return:
-            A list of neighbouring cells to the current position
+    Params: 
+        curPos (tuple): The current position of the robot in the form (row, col).
+        map (list): The grid map.
+
+    Returns:
+        list: A list of neighbouring cells to the current position in the form [(row1, col1), (row2, col2), ...].
     """
     row = curPos[0]
     col = curPos[1]
@@ -164,6 +166,12 @@ def followPath(startCell, orientation, path):
     print("following path...")
 
     for i in range(len(path)):
+        # print("checking for obstacles...")
+        # if obstacleDetected():
+        #     print("waiting for client to pass...")
+        #     while obstacleDetected():
+        #         pass
+        
         nextPos = path[i]
         relDir = relDirection(curPos, nextPos)
 
@@ -180,7 +188,6 @@ def followPath(startCell, orientation, path):
             print('Turn right')
             turn_in_place('right', 90, 100)
 
-        
         elif angle == -1 or angle == 3:
             print('Turn left')
             turn_in_place('left', 90, 100)
@@ -191,7 +198,7 @@ def followPath(startCell, orientation, path):
 
 
         print("Go straight")
-        drive_straight(45, 100)
+        drive_straight(450, 200)
         print()
 
         curPos = nextPos
@@ -202,8 +209,8 @@ def followPath(startCell, orientation, path):
     return curPos, curDir
 
 
-if __name__ == "__main__":
-    print("main")
+# if __name__ == "__main__":
+#     print("main")
     # test_grid = [[0,0,0,0,0],
     #              [0,0,1,1,0],
     #              [0,0,1,0,0],
