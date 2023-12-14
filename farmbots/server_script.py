@@ -1,12 +1,11 @@
 #!/usr/bin/env pybricks-micropython
-import math
-import threading
 from comms import close_bluetooth_connection, create_mailbox, decode_message, send_client_task_message, start_bluetooth_server, test_handshake
 from farm_helpers import initialize__server_world
 from localization import get_current_position
 import queue
 from collections import deque
 import time
+import math
 
 # queue to track incoming client messages
 client_updates_queue = deque()
@@ -40,7 +39,6 @@ def print_world(farm_space):
     for row in farm_space:
         print(" ".join(map(str, row)))
 
-
 def print_fruit_state():
     """
     Prints the fruit state in key-value pairs line by line.
@@ -50,26 +48,6 @@ def print_fruit_state():
         print("Location: {}, Color: {}, Picked: {}, Assigned Agent: {}".format(
             location, state['color'], state['picked'], state['assigned_agent']
         ))
-
-
-# def shortest_distance_to_fruit(client_position, fruit_position):
-#     """
-#     Calculate the shortest Euclidean distance from the client to any fruit.
-
-#     Parameters:
-#     - client_position (tuple): The (x, y) position of the client.
-#     - fruit_positions (list of tuples): List of (x, y) positions of all fruits.
-
-#     Returns:
-#     float: The shortest Euclidean distance to a fruit.
-#     """
-#     shortest_distance = float('inf')
-
-#     distance = math.sqrt((client_position[0] - fruit_position[0]) ** 2 +
-#                              (client_position[1] - fruit_position[1]) ** 2)
-
-#     return shortest_distance
-
 
 # def assign_task(client_name):
 #     """
@@ -86,7 +64,6 @@ def print_fruit_state():
 #             state['assigned_agent'] = client_name
 #             assigned_fruits.add(fruit_location)
 #             return fruit_location
-        
 
 def assign_task(client_name, client_position):
     """
@@ -122,13 +99,11 @@ def assign_task(client_name, client_position):
 
     return optimal_task
 
-
 def reassign_task(client_name, fruit_location):
     return fruit_location
 
 def assign_new_task(client_name):
     pass
-
 
 
 def process_message(client_name, message, fruit_number):
@@ -148,18 +123,17 @@ def process_message(client_name, message, fruit_number):
     message_list = decode_message(message)
 
     status, task_state, client_position, fruit_location = message_list
-    print("current client position: " + str(client_position))
 
-    if  fruit_location:
-        fruit_state[fruit_location]['picked'] = True if task_state == 'completed' else False
-        # fruit_number = fruit_number -1 if task_state == 'completed' else fruit_number
-        fruit_state[fruit_location]['assigned_agent'] = client_name 
-        if task_state == 'completed' and fruit_state[fruit_location]['picked']:
+    if fruit_location:
+        if task_state == 'completed' and not fruit_state[fruit_location]['picked']:
+            fruit_state[fruit_location]['picked'] = True
+            fruit_state[fruit_location]['assigned_agent'] = client_name
             fruit_number -= 1
+            print("fruits left: " + str(fruit_number))
     print("current fruit states...")
     print_fruit_state()
 
-    if fruit_number == 0:
+    if fruit_number <= 0:
         return None
 
     if status == 'free':
@@ -167,25 +141,26 @@ def process_message(client_name, message, fruit_number):
         assigned_task = assign_task(client_name, (client_position[0], client_position[1]))
         if assigned_task: 
             print("Assigned task to " + client_name +": " + "Go to fruit at " + str(assigned_task))
+            
             return assigned_task
         
-    elif status == 'busy' and task_state == 'in progress':
-        # client is waiting for redirection
-        reassigned_task = reassign_task(client_name, fruit_location)
-        if reassigned_task: 
-            print("Reassigned task to " + client_name +": " + "Go to fruit at " + str(reassigned_task))
-            return reassigned_task
+    # elif status == 'busy' and task_state == 'in progress':
+    #     # client is waiting for redirection
+    #     reassigned_task = reassign_task(client_name, fruit_location)
+    #     if reassigned_task: 
+    #         print("Reassigned task to " + client_name +": " + "Go to fruit at " + str(reassigned_task))
+    #         return reassigned_task
     
 
  
 def main():
     server_mailbox_name = client_mailbox_name = 'client'
     client_num = 2
-    GRID_SIZE = 12
+    GRID_SIZE = 5
     fruit_map = {
         (2, 3): 'red', 
-        (5, 8): 'green', 
-        (9, 4): 'yellow'
+        (1, 2): 'green', 
+        (0, 4): 'yellow'
         }
 
     # step 1: connect to clients
@@ -201,9 +176,13 @@ def main():
     farm_space = initialize__server_world(fruit_map, grid_size=GRID_SIZE)
     print_world(farm_space)
     fruit_number = initialize_fruit_state(farm_space=farm_space)
+    print("number of fruits: " + str(fruit_number))
+
+    # dictionary to track each client's status and task
+    client_statuses = {client_name: {'status': 'free', 'task_state': None, 'position': None, 'fruit_location': None} for client_name in server_mailboxes.keys()}
     
     # step 3: while all fruits are not collected...
-    while fruit_number > 0:
+    while any(not state['picked'] for state in fruit_state.values()):
     # step 3.1: queue update messages from clients
         for client_mailbox_name, server_mailbox in server_mailboxes.items():
             received_message = server_mailbox.read()
@@ -213,25 +192,27 @@ def main():
                 print(client_updates_queue)
     
         #step 3.2: process messages in queue
-        threads = []
         while client_updates_queue:
-            # print("reading a message...")
             client_name, message = client_updates_queue.popleft()
             assigned_fruit_location = process_message(client_name, message, fruit_number)
             if assigned_fruit_location:
                 task_message = assigned_fruit_location
+
+                client_statuses[client_name]['status'] = 'busy'
+                client_statuses[client_name]['task_state'] = 'in progress'
+                client_statuses[client_name]['position'] = client_statuses[client_name]['position']
+                client_statuses[client_name]['fruit_location'] = task_message
+
                 send_client_task_message(server_mailboxes[client_name], client_name, task_message)
-            else:
-                # no more fruits to collect
-                print("all fruits collected successfully, program ending...")
-                fruit_number = 0
+                print()
+                print()
+            # else:
+            #     # no more fruits to collect
+            #     print("all fruits collected successfully, program ending...")
+            #     break
     
-        time.sleep(5)
-    # close_bluetooth_connection(server)
-        
+        time.sleep(7)        
+
 
 if __name__ == "__main__":
    main()
-
-
-
