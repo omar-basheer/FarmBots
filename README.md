@@ -1,7 +1,10 @@
 # MRC-FarmBots
 
 ## Demo
+
 <img src="https://github.com/omar-basheer/UniVerse-Social-Network-App/blob/main/fulldemo-_1_.gif" width="1170" height="440"/>
+
+Note: Video sped up for demo purposes
 
 ## Overview
 This repository contains the codebase for the robotic farm project. The project involves the development of an autonomous robotic system capable of navigating a farm space, collecting fruits, and executing tasks assigned by a central server.
