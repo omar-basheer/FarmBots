@@ -2,7 +2,7 @@
 
 ## Demo
 
-<img src="https://github.com/omar-basheer/UniVerse-Social-Network-App/blob/main/fulldemo-_1_.gif" width="1170" height="440"/>
+<img src="https://github.com/omar-basheer/MRC-Farmbots/blob/main/mrc_demo.gif" width="1170" height="440"/>
 
 Note: Video sped up for demo purposes
 
