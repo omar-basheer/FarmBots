@@ -7,7 +7,7 @@
 Note: Video sped up for demo purposes
 
 ## Overview
-This repository contains the codebase for the multi-robot fruit harvesting systwm. The project involves the development of an autonomous robotic system capable of navigating a farm space, collecting fruits, and executing tasks assigned by a central server.
+This repository contains the codebase for the multi-robot fruit harvesting system. The project involved the development of an autonomous robotic system capable of navigating a farm space, collecting fruits, and executing tasks assigned by a central server.
 
 ## Features
 * Open-Loop Control: The clients use an open-loop control mechanism to navigate through the farm space, executing predefined sequences of movements and turns.
